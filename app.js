@@ -19,6 +19,19 @@ app.use(express.json()); // express.json is middleware: a function that can modi
 //   res.send('You can post to this endpoint');
 // });
 
+app.use((req, res, next) => {
+  console.log('hello from the middleware!');
+  next();
+  // ^ extremely important to include next function in all of your middleware. If we didn't call it, the req/res cycle would be stuck at this point and would not move on.
+  // called "next" by convention but is actually just the 3rd param in the app.use method
+  // middleware is called in the order it appears in the code. If you had this after the route handlers, it wouldn't be implemented because any res.___.json ends the req/res cycle.
+});
+
+app.use((req, res, next) => {
+  req.requestTime = new Date().toISOString();
+  next();
+});
+
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/dev-data/data/tours-simple.json`)
 );
@@ -27,9 +40,11 @@ const tours = JSON.parse(
 // JSON.parse converts to a javascript object
 
 const getAllTours = (req, res) => {
+  console.log(req.requestTime);
   // now, we send res back to the client
   res.status(200).json({
     status: 'success', // "success" = any 200 code; "fail" = error at the client; "error" = error at the server
+    requestedAt: req.requestTime,
     results: tours.length, // only for convenience, to know how many results to expect
     data: {
       // data is an "envelope" for our data -- returns an object containing the data
@@ -126,6 +141,8 @@ const deleteTour = (req, res) => {
 // app.post('/api/v1/tours', createTour);
 // app.patch('/api/v1/tours/:id', updateTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
+
+// ROUTE HANDLERS -- middleware functions that only apply to a certain route
 
 app
   .route('/api/v1/tours/') // for this route, for the following HTTP methods, do these functions:
