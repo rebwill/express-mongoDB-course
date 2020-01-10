@@ -142,6 +142,46 @@ const deleteTour = (req, res) => {
   });
 };
 
+const getAllUsers = (req, res) => {
+  res.status(500).json({
+    // 500 = internal server error
+    status: 'error',
+    message: 'This route is not net defined.'
+  });
+};
+
+const getUser = (req, res) => {
+  res.status(500).json({
+    // 500 = internal server error
+    status: 'error',
+    message: 'This route is not net defined.'
+  });
+};
+
+const createUser = (req, res) => {
+  res.status(500).json({
+    // 500 = internal server error
+    status: 'error',
+    message: 'This route is not net defined.'
+  });
+};
+
+const updateUser = (req, res) => {
+  res.status(500).json({
+    // 500 = internal server error
+    status: 'error',
+    message: 'This route is not net defined.'
+  });
+};
+
+const deleteUser = (req, res) => {
+  res.status(500).json({
+    // 500 = internal server error
+    status: 'error',
+    message: 'This route is not net defined.'
+  });
+};
+
 // app.get('/api/v1/tours', getAllTours);
 // // ^ if this endpoint is hit, do this ^ (getAllTours)
 // app.get('/api/v1/tours/:id', getTour);
@@ -160,6 +200,16 @@ app
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
+app
+  .route('/api/v1/users')
+  .get(getAllUsers)
+  .post(createUser);
+
+app
+  .route('/api/v1/users/:id')
+  .get(getUser)
+  .patch(updateUser)
+  .delete(deleteUser);
 
 // 4. START THE SERVER
 
