@@ -67,6 +67,7 @@ app.get('/api/v1/tours/:id', (req, res) => {
 });
 
 // POST REQUESTS
+// passes entire object to be updated
 
 app.post('/api/v1/tours', (req, res) => {
   // out of the box, Express does not include the data to be sent (POSTed) in the request. So we need to use middleware.
@@ -93,6 +94,26 @@ app.post('/api/v1/tours', (req, res) => {
     }
   );
   // ^ Not using writeFileSync because this is running in the event loop and we cannot block the event loop with a synchronous function.
+});
+
+// PATCH REQUESTS
+// only passes properties to be updated
+
+app.patch('/api/v1/tours/:id', (req, res) => {
+  // if (!tour) {
+  // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+  res.status(200).json({
+    status: 'success',
+    data: {
+      tour: '<Updated tour here...>'
+    }
+  });
 });
 
 const port = 3000; // define the port
