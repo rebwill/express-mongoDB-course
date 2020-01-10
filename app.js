@@ -116,6 +116,22 @@ app.patch('/api/v1/tours/:id', (req, res) => {
   });
 });
 
+app.delete('/api/v1/tours/:id', (req, res) => {
+  // if (!tour) {
+  // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+  res.status(204).json({
+    // 204 usually means "no content". Since we're deleting, we won't send any content back.
+    status: 'success',
+    data: null // this is to show that the resource we deleted no longer exists
+  });
+});
+
 const port = 3000; // define the port
 app.listen(port, () => {
   // listen to the port
