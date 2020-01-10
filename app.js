@@ -1,7 +1,12 @@
 const fs = require('fs');
 const express = require('express');
+const morgan = require('morgan');
 
 const app = express(); // express is actually a function that will add a bunch of methods to our 'app' variable
+
+// 1) MIDDLEWARES
+
+app.use(morgan('dev')); // into this function we can pass an argument that will specify how we want the logging to look like. We can use predefined strings for this.
 
 app.use(express.json()); // express.json is middleware: a function that can modify the incoming request data.
 // A step the request goes through while being processed.
@@ -38,6 +43,8 @@ const tours = JSON.parse(
 // ^^ before we can send the data, we need to read it.
 // dirname is the folder where the current script is located
 // JSON.parse converts to a javascript object
+
+// 2. ROUTE HANDLERS
 
 const getAllTours = (req, res) => {
   console.log(req.requestTime);
@@ -142,7 +149,7 @@ const deleteTour = (req, res) => {
 // app.patch('/api/v1/tours/:id', updateTour);
 // app.delete('/api/v1/tours/:id', deleteTour);
 
-// ROUTE HANDLERS -- middleware functions that only apply to a certain route
+// 3. ROUTES -- middleware functions that only apply to a certain route
 
 app
   .route('/api/v1/tours/') // for this route, for the following HTTP methods, do these functions:
@@ -153,6 +160,8 @@ app
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
+
+// 4. START THE SERVER
 
 const port = 3000; // define the port
 app.listen(port, () => {
