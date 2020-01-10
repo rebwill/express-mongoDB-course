@@ -26,9 +26,7 @@ const tours = JSON.parse(
 // dirname is the folder where the current script is located
 // JSON.parse converts to a javascript object
 
-// GET ALL TOURS
-
-app.get('/api/v1/tours', (req, res) => {
+const getAllTours = (req, res) => {
   // now, we send res back to the client
   res.status(200).json({
     status: 'success', // "success" = any 200 code; "fail" = error at the client; "error" = error at the server
@@ -39,14 +37,10 @@ app.get('/api/v1/tours', (req, res) => {
       // in reality, ES6 says if key and value have same name, you can just write it once, e.g. data { tours }. I'm leaving it as data { tours: tours } to be clear what it is
     }
   });
-});
+};
 
-// GET ONE TOUR
-
-app.get('/api/v1/tours/:id', (req, res) => {
-  // ^ you can add an OPTIONAL variable by adding a question mark, like :x?
+const getTour = (req, res) => {
   console.log(req.params); // params is where the variables (like :id) are stored
-
   const id = req.params.id * 1; // Need to convert req.params.id from string to number. Javascript trick: when multiplying a string that looks like a number, by a number, it will convert the string automatically to a number.
 
   if (id > tours.length) {
@@ -64,12 +58,9 @@ app.get('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: tour // tour comes from the tour variable above
   });
-});
+};
 
-// POST REQUESTS
-// passes entire object to be updated
-
-app.post('/api/v1/tours', (req, res) => {
+const createTour = (req, res) => {
   // out of the box, Express does not include the data to be sent (POSTed) in the request. So we need to use middleware.
   //   console.log(req.body); // body becomes available on the request due to using the middleware earlier in the code.
 
@@ -94,12 +85,9 @@ app.post('/api/v1/tours', (req, res) => {
     }
   );
   // ^ Not using writeFileSync because this is running in the event loop and we cannot block the event loop with a synchronous function.
-});
+};
 
-// PATCH REQUESTS
-// only passes properties to be updated
-
-app.patch('/api/v1/tours/:id', (req, res) => {
+const updateTour = (req, res) => {
   // if (!tour) {
   // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
   if (req.params.id * 1 > tours.length) {
@@ -114,9 +102,9 @@ app.patch('/api/v1/tours/:id', (req, res) => {
       tour: '<Updated tour here...>'
     }
   });
-});
+};
 
-app.delete('/api/v1/tours/:id', (req, res) => {
+const deleteTour = (req, res) => {
   // if (!tour) {
   // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
   if (req.params.id * 1 > tours.length) {
@@ -130,7 +118,24 @@ app.delete('/api/v1/tours/:id', (req, res) => {
     status: 'success',
     data: null // this is to show that the resource we deleted no longer exists
   });
-});
+};
+
+// app.get('/api/v1/tours', getAllTours);
+// // ^ if this endpoint is hit, do this ^ (getAllTours)
+// app.get('/api/v1/tours/:id', getTour);
+// app.post('/api/v1/tours', createTour);
+// app.patch('/api/v1/tours/:id', updateTour);
+// app.delete('/api/v1/tours/:id', deleteTour);
+
+app
+  .route('/api/v1/tours/') // for this route, for the following HTTP methods, do these functions:
+  .get(getAllTours)
+  .post(createTour);
+app
+  .route('/api/v1/tours/:id')
+  .get(getTour)
+  .patch(updateTour)
+  .delete(deleteTour);
 
 const port = 3000; // define the port
 app.listen(port, () => {
