@@ -26,7 +26,7 @@ const tours = JSON.parse(
 // dirname is the folder where the current script is located
 // JSON.parse converts to a javascript object
 
-// GET REQUESTS
+// GET ALL TOURS
 
 app.get('/api/v1/tours', (req, res) => {
   // now, we send res back to the client
@@ -38,6 +38,31 @@ app.get('/api/v1/tours', (req, res) => {
       tours: tours // the latter "tours" corresponds to the "tours" in the GET url. AKA, the data that comes from that.
       // in reality, ES6 says if key and value have same name, you can just write it once, e.g. data { tours }. I'm leaving it as data { tours: tours } to be clear what it is
     }
+  });
+});
+
+// GET ONE TOUR
+
+app.get('/api/v1/tours/:id', (req, res) => {
+  // ^ you can add an OPTIONAL variable by adding a question mark, like :x?
+  console.log(req.params); // params is where the variables (like :id) are stored
+
+  const id = req.params.id * 1; // Need to convert req.params.id from string to number. Javascript trick: when multiplying a string that looks like a number, by a number, it will convert the string automatically to a number.
+
+  if (id > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+  // ^ This is to handle the case that an ID is requested that doesn't exist.
+
+  const tour = tours.find(el => el.id === id);
+  // ^ find loops through tours array and returns T/F for the statement on each element. It returns the 1st array item that returns true.
+
+  res.status(200).json({
+    status: 'success',
+    data: tour // tour comes from the tour variable above
   });
 });
 
