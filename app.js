@@ -6,7 +6,7 @@ const app = express(); // express is actually a function that will add a bunch o
 
 // 1) MIDDLEWARES
 
-app.use(morgan('dev')); // into this function we can pass an argument that will specify how we want the logging to look like. We can use predefined strings for this.
+app.use(morgan('dev')); // into this function we can pass an argument that will specify how we want the logging of the request to look like. We can use predefined strings for this ('dev' is one of these predefined strings).
 
 app.use(express.json()); // express.json is middleware: a function that can modify the incoming request data.
 // A step the request goes through while being processed.
@@ -146,7 +146,7 @@ const getAllUsers = (req, res) => {
   res.status(500).json({
     // 500 = internal server error
     status: 'error',
-    message: 'This route is not net defined.'
+    message: 'This route is not yet defined.'
   });
 };
 
@@ -154,7 +154,7 @@ const getUser = (req, res) => {
   res.status(500).json({
     // 500 = internal server error
     status: 'error',
-    message: 'This route is not net defined.'
+    message: 'This route is not yet defined.'
   });
 };
 
@@ -162,7 +162,7 @@ const createUser = (req, res) => {
   res.status(500).json({
     // 500 = internal server error
     status: 'error',
-    message: 'This route is not net defined.'
+    message: 'This route is not yet defined.'
   });
 };
 
@@ -170,7 +170,7 @@ const updateUser = (req, res) => {
   res.status(500).json({
     // 500 = internal server error
     status: 'error',
-    message: 'This route is not net defined.'
+    message: 'This route is not yet defined.'
   });
 };
 
@@ -178,7 +178,7 @@ const deleteUser = (req, res) => {
   res.status(500).json({
     // 500 = internal server error
     status: 'error',
-    message: 'This route is not net defined.'
+    message: 'This route is not yet defined.'
   });
 };
 
@@ -191,25 +191,32 @@ const deleteUser = (req, res) => {
 
 // 3. ROUTES -- middleware functions that only apply to a certain route
 
-app
-  .route('/api/v1/tours/') // for this route, for the following HTTP methods, do these functions:
+const tourRouter = express.Router();
+const userRouter = express.Router();
+
+tourRouter
+  .route('/') // for this route, for the following HTTP methods, do these functions:
   .get(getAllTours)
   .post(createTour);
-app
-  .route('/api/v1/tours/:id')
+tourRouter
+  .route('/:id')
   .get(getTour)
   .patch(updateTour)
   .delete(deleteTour);
-app
-  .route('/api/v1/users')
+userRouter
+  .route('/')
   .get(getAllUsers)
   .post(createUser);
-
-app
-  .route('/api/v1/users/:id')
+userRouter
+  .route('/:id')
   .get(getUser)
   .patch(updateUser)
   .delete(deleteUser);
+
+// "Mounting a new router on a route / Mounting the router"
+app.use('/api/v1/tours/', tourRouter);
+app.use('/api/v1/users/', userRouter);
+// ^ for this URL, use this ^ middleware function
 
 // 4. START THE SERVER
 
