@@ -1,4 +1,8 @@
+// IMPORTS
+
 const fs = require('fs');
+
+// FILE READING
 
 const tours = JSON.parse(
   fs.readFileSync(`${__dirname}/../dev-data/data/tours-simple.json`)
@@ -7,6 +11,25 @@ const tours = JSON.parse(
 // ^^ before we can send the data, we need to read it.
 // dirname is the folder where the current script is located
 // JSON.parse converts to a javascript object
+
+// PARAM MIDDLEWARE
+
+exports.checkID = (req, res, next, val) => {
+  //                                ^value of param (the id in the URL)
+  // ^ this is a param middleware that does the validation of the ID, instead of repeating the same function in every Controller.
+  console.log(`Tour id is: ${val}`);
+  // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
+  if (req.params.id * 1 > tours.length) {
+    return res.status(404).json({
+      status: 'fail',
+      message: 'Invalid ID'
+    });
+  }
+  next();
+};
+// it needs a return statement because if the id IS invalid, we don't want it to continue on to the next() function!
+// if it didn't have the return, it would keep going and end up sending an incorrect/error response.
+// if the URL does not have an id, this middleware will be ignored.
 
 // ROUTE HANDLERS
 
@@ -28,14 +51,6 @@ exports.getAllTours = (req, res) => {
 exports.getTour = (req, res) => {
   console.log(req.params); // params is where the variables (like :id) are stored
   const id = req.params.id * 1; // Need to convert req.params.id from string to number. Javascript trick: when multiplying a string that looks like a number, by a number, it will convert the string automatically to a number.
-
-  if (id > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID'
-    });
-  }
-  // ^ This is to handle the case that an ID is requested that doesn't exist.
 
   const tour = tours.find(el => el.id === id);
   // ^ find loops through tours array and returns T/F for the statement on each element. It returns the 1st array item that returns true.
@@ -74,14 +89,6 @@ exports.createTour = (req, res) => {
 };
 
 exports.updateTour = (req, res) => {
-  // if (!tour) {
-  // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID'
-    });
-  }
   res.status(200).json({
     status: 'success',
     data: {
@@ -91,14 +98,6 @@ exports.updateTour = (req, res) => {
 };
 
 exports.deleteTour = (req, res) => {
-  // if (!tour) {
-  // if the tour variable does not find any matching items with tours.find (comes back undefined), return invalid ID
-  if (req.params.id * 1 > tours.length) {
-    return res.status(404).json({
-      status: 'fail',
-      message: 'Invalid ID'
-    });
-  }
   res.status(204).json({
     // 204 usually means "no content". Since we're deleting, we won't send any content back.
     status: 'success',

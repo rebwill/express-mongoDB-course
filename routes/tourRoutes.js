@@ -7,6 +7,9 @@ const tourController = require('./../controllers/tourController');
 
 const router = express.Router();
 
+router.param('id', tourController.checkID);
+// if the URL does not have an id, this middleware will be ignored.
+
 router
   .route('/') // for this route, for the following HTTP methods, do these functions:
   .get(tourController.getAllTours)
