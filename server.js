@@ -1,4 +1,5 @@
-// good practice to have everything related to express in one file (app.js) and everything related to the server in another file (server.js).
+// good practice to have everything related to express in one file (app.js)
+// and everything related to the server in another file (server.js).
 
 // IMPORT APP
 

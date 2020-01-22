@@ -31,6 +31,16 @@ exports.checkID = (req, res, next, val) => {
 // if it didn't have the return, it would keep going and end up sending an incorrect/error response.
 // if the URL does not have an id, this middleware will be ignored.
 
+exports.checkBody = (req, res, next) => {
+  if (!req.body.name || !req.body.price) {
+    return res.status(400).json({
+      status: 'fail',
+      message: 'Missing name or price'
+    });
+  }
+  next();
+};
+
 // ROUTE HANDLERS
 
 exports.getAllTours = (req, res) => {

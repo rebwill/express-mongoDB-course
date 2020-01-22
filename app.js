@@ -56,8 +56,10 @@ app.use((req, res, next) => {
 // "Mounting the router"
 app.use('/api/v1/tours/', tourRouter);
 app.use('/api/v1/users/', userRouter);
+// Pointing certain routes to different middleware, for the ones that we don't want to use the same middleware for all.
 // "For this route, we want to apply the tourRouter middleware"
 // Because they are middleware, we can use app.use to mount them.
 // each function is defined in its own file, and imported at beginning of this file
 
 module.exports = app;
+// export so we can import it in server.js

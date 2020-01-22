@@ -10,10 +10,17 @@ const router = express.Router();
 router.param('id', tourController.checkID);
 // if the URL does not have an id, this middleware will be ignored.
 
+// Create a checkBody middleware
+// Check if body contains name and price property
+// If not, send back 400 (bad request)
+// Add it to the post handler stack
+
 router
   .route('/') // for this route, for the following HTTP methods, do these functions:
   .get(tourController.getAllTours)
-  .post(tourController.createTour);
+  .post(tourController.checkBody, tourController.createTour);
+// it's a good idea to separate validations, middleware etc from the actual handler that will create the tour.
+// this allows the handler to only deal with creating the new resource.
 router
   .route('/:id')
   .get(tourController.getTour)
