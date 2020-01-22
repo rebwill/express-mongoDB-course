@@ -15,6 +15,13 @@ app.use(express.json()); // express.json is middleware: a function that can modi
 // A step the request goes through while being processed.
 // It adds data from the body into the request object for POST requests.
 
+app.use(express.static(`${__dirname}/public`));
+// Not necessary for this app, but in case you want to serve static files (e.g. overview.html)
+// There's a built-in express middleware for this: static
+//                      ^here we pass the directory from which we want to serve static files.
+// http://127.0.0.1:3000/overview.html goes to the overview page! Why? ->
+// When we go to a URL that the app can't find in any of our routes, it will then look in the public folder that we defined, and then sets that folder as the route.
+
 // app.get('/', (req, res) => {
 //   // for all get requests: 1st param is root URL, 2nd param is a callback function taking req/res as params
 //   res
